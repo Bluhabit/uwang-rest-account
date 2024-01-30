@@ -7,7 +7,6 @@ func GenerateEntity() {
 		ModelPkgPath: "./entity",
 		Mode:         gen.WithoutContext | gen.WithDefaultQuery | gen.WithQueryInterface,
 	})
-
 	g.UseDB(GetDbConnection())
 	g.GenerateAllTable()
 	g.Execute()
