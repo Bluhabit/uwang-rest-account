@@ -15,4 +15,4 @@ WORKDIR /app
 COPY --from=builder /app/uwang-rest-account .
 RUN apk --no-cache add ca-certificates tzdata
 EXPOSE 7009
-ENTRYPOINT ["/app/uwang-rest-storage"]
+ENTRYPOINT ["/app/uwang-rest-account"]
