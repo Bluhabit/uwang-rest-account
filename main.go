@@ -8,6 +8,16 @@ import (
 )
 
 func main() {
+	//var err error
+	//err = godotenv.Load()
+	//if err != nil {
+	//	log.Fatalf("Error getting env, %v", err)
+	//} else {
+	//	fmt.Println("we are getting the env values")
+	//}
+	//
+	//contoh := os.Getenv("GIN_MODE")
+
 	r := gin.Default()
 
 	r.GET("/", func(c *gin.Context) {
