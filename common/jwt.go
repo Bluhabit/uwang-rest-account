@@ -41,5 +41,4 @@ func DecodeJWT(token string) *UserClaims {
 		return key, nil
 	})
 	return decoder.Claims.(*UserClaims)
-
 }
