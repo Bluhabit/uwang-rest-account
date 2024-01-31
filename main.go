@@ -1,22 +1,15 @@
 package main
 
 import (
-	"github.com/Bluhabit/uwang-rest-account/routes"
+	"github.com/Bluhabit/uwang-rest-account/common"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
 )
 
 func main() {
-	//var err error
-	//err = godotenv.Load()
-	//if err != nil {
-	//	log.Fatalf("Error getting env, %v", err)
-	//} else {
-	//	fmt.Println("we are getting the env values")
-	//}
-	//
-	//contoh := os.Getenv("GIN_MODE")
+
+	common.GenerateEntity()
 
 	r := gin.Default()
 
@@ -26,7 +19,7 @@ func main() {
 		})
 	})
 
-	routes.InitRoutes(r)
+	//	routes.InitRoutes(r)
 
 	if err := r.Run(":8000"); err != nil {
 		log.Fatal("Gagal memulai server")
