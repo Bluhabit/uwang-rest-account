@@ -74,3 +74,17 @@ func GetProfileInterestTopicByUserID(userId string) *entity.UserProfile {
 	}
 	return &UserProfile
 }
+
+func GetProfileLevelByUserID(userId string) *entity.UserProfile {
+	db := common.GetDbConnection()
+	if db == nil {
+		return nil
+	}
+
+	var UserProfile entity.UserProfile
+	if err := db.Where("user_id = ? AND key = 'level'", userId).
+		First(&UserProfile).Error; err != nil {
+		return nil
+	}
+	return &UserProfile
+}

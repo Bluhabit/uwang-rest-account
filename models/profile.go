@@ -11,3 +11,7 @@ type UpdateProfilePicture struct {
 type UpdateProfileInterestTopic struct {
 	InterestTopic string `json:"interest_topic"`
 }
+
+type UpdateProfileLevel struct {
+	Level string `json:"level"`
+}

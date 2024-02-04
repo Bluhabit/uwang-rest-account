@@ -146,5 +146,49 @@ func UpdateProfileInterestTopics(ctx *gin.Context) {
 }
 
 func UpdateProfileLevel(ctx *gin.Context) {
+	var response = models.BaseResponse[string]{}
+	var updateRequest models.UpdateProfileLevel
 
+	if err := ctx.ShouldBindJSON(&updateRequest); err != nil {
+		ctx.JSON(200, response.BadRequest("", err.Error()))
+	}
+
+	//userid, exists := ctx.Get("user")
+	userid, exists := common.DummyToken("0ea085da-b618-42a1-8130-019195bf5e81")
+	if !exists {
+		ctx.JSON(200, response.BadRequest("", "Token not Provided"))
+		return
+	}
+
+	userProfile := repositories.GetProfileLevelByUserID(userid)
+
+	var profilePictureID = uuid.NewString()
+
+	if userProfile == nil {
+		// create data
+		newProfile := &entity.UserProfile{
+			ID:        profilePictureID,
+			Key:       "level",
+			Value:     updateRequest.Level,
+			UserID:    userid,
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
+			Deleted:   false,
+		}
+
+		err := repositories.CreateUserProfile(newProfile)
+		if err != nil {
+			ctx.JSON(200, response.BadRequest("", "level gagal disimpan"))
+			return
+		}
+		ctx.JSON(200, response.Success("", "berhasil membuat level"))
+		return
+	}
+
+	userProfile.Value = updateRequest.Level
+	err := repositories.UpdateUserProfile(userProfile)
+	if err != nil {
+		ctx.JSON(200, response.BadRequest("", "gagal menyimpan level baru"))
+	}
+	ctx.JSON(200, response.Success("", "berhasil menyimpan level"))
 }
