@@ -7,3 +7,7 @@ type UpdateProfileUsername struct {
 type UpdateProfilePicture struct {
 	ProfilePicture string `json:"profile_picture"`
 }
+
+type UpdateProfileInterestTopic struct {
+	InterestTopic string `json:"interest_topic"`
+}

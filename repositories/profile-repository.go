@@ -19,7 +19,7 @@ func GetUserProfileById(id string) *entity.UserCredential {
 	return &userCredential
 }
 
-func UpdateUserProfile(userCredential *entity.UserCredential) error {
+func UpdateUsername(userCredential *entity.UserCredential) error {
 	db := common.GetDbConnection()
 	return db.Save(userCredential).Error
 }
@@ -49,14 +49,28 @@ func GetProfilePictureByUserID(userId string) *entity.UserProfile {
 	return &UserProfile
 }
 
-func CreateUserProfilePicture(userProfile *entity.UserProfile) error {
+func CreateUserProfile(userProfile *entity.UserProfile) error {
 	db := common.GetDbConnection()
 
 	return db.Create(userProfile).Error
 }
 
-func UpdateUserProfilePicture(userProfile *entity.UserProfile) error {
+func UpdateUserProfile(userProfile *entity.UserProfile) error {
 	db := common.GetDbConnection()
 
 	return db.Save(userProfile).Error
+}
+
+func GetProfileInterestTopicByUserID(userId string) *entity.UserProfile {
+	db := common.GetDbConnection()
+	if db == nil {
+		return nil
+	}
+
+	var UserProfile entity.UserProfile
+	if err := db.Where("user_id = ? AND key = 'interest-topic'", userId).
+		First(&UserProfile).Error; err != nil {
+		return nil
+	}
+	return &UserProfile
 }
