@@ -2,41 +2,16 @@ package routes
 
 import (
 	"github.com/Bluhabit/uwang-rest-account/common"
+	"github.com/Bluhabit/uwang-rest-account/models"
 	"github.com/Bluhabit/uwang-rest-account/repositories"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 func UpdateProfileUsername(ctx *gin.Context) {
-	// ambil request dari user
-
-	//claims, exists := ctx.Get("user")
-	//if !exists {
-	//	ctx.JSON(401, gin.H{
-	//		"status_code": 401,
-	//		"data":        nil,
-	//		"message":     "Token not provided",
-	//	})
-	//	return
-	//}
-	//
-	//ctx.JSON(200, gin.H{
-	//	"status_code": 401,
-	//	"data":        claims,
-	//	"message":     "Token not provided",
-	//})
-	//
-	//user := repositories.GetUserById(claims.(common.UserClaims).Sub)
-	//
-	//if user == nil {
-	//	ctx.JSON(401, gin.H{
-	//		"status_code": 401,
-	//		"data":        claims,
-	//		"message":     "Token not provided",
-	//	})
-	//}
-
 	// Ambil request dari user
+	var response = models.BaseResponse[string]{}
+
 	var updateRequest struct {
 		Username string `json:"username"`
 	}
@@ -50,22 +25,14 @@ func UpdateProfileUsername(ctx *gin.Context) {
 	//claims, exists := ctx.Get("user")
 	claims, exists := common.DummyToken("0ea085da-b618-42a1-8130-019195bf5e81")
 	if !exists {
-		ctx.JSON(401, gin.H{
-			"status_code": 401,
-			"data":        nil,
-			"message":     "Token not Provided",
-		})
+		ctx.JSON(200, response.BadRequest("", "Token not Provided"))
 		return
 	}
 
-	userCredential := repositories.GetUserProfileById("0ea085da-b618-42a1-8130-019195bf5e81")
+	userCredential := repositories.GetUserProfileById(claims)
 
 	if userCredential == nil {
-		ctx.JSON(401, gin.H{
-			"status_code": 401,
-			"data":        claims,
-			"message":     "Profil user gak ketemu",
-		})
+		ctx.JSON(200, response.BadRequest("", "profil user tidak ditemukan"))
 		return
 	}
 
@@ -73,11 +40,7 @@ func UpdateProfileUsername(ctx *gin.Context) {
 	userCredential.Username = updateRequest.Username
 	repositories.UpdateUserProfile(userCredential)
 
-	ctx.JSON(200, gin.H{
-		"status_code": 200,
-		"data":        userCredential,
-		"message":     "Username updated successfully",
-	})
+	ctx.JSON(200, response.Success("", "Berhasil merubah username"))
 }
 
 func UpdateProfilePicture(ctx *gin.Context) {
