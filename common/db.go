@@ -7,6 +7,7 @@ import (
 	_ "github.com/redis/go-redis/v9"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"log"
 	"os"
 	"strconv"
 )
@@ -15,6 +16,7 @@ func GetDbConnection() *gorm.DB {
 	var err error
 	err = godotenv.Load()
 	if err != nil {
+		fmt.Println(err)
 		return nil
 	}
 
@@ -33,7 +35,12 @@ func GetDbConnection() *gorm.DB {
 		dbPort,
 	)
 
-	database, _ := gorm.Open(postgres.Open(url), &gorm.Config{})
+	database, err := gorm.Open(postgres.Open(url), &gorm.Config{})
+	if err != nil {
+		log.Println("Failed connect to database")
+		return nil
+	}
+	log.Println("Successfully connected to database")
 	return database
 }
 
