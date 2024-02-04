@@ -22,6 +22,12 @@ func UpdateProfileUsername(ctx *gin.Context) {
 		})
 	}
 
+	// cek username yang ada
+	existingUser := repositories.GetUserByUsername(updateRequest.Username)
+	if existingUser != nil {
+		ctx.JSON(200, response.BadRequest("", "username sudah digunakan"))
+	}
+
 	//claims, exists := ctx.Get("user")
 	claims, exists := common.DummyToken("0ea085da-b618-42a1-8130-019195bf5e81")
 	if !exists {

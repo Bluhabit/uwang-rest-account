@@ -23,3 +23,14 @@ func UpdateUserProfile(userCredential *entity.UserCredential) error {
 	db := common.GetDbConnection()
 	return db.Save(userCredential).Error
 }
+
+func GetUserByUsername(username string) *entity.UserCredential {
+	db := common.GetDbConnection()
+	var user entity.UserCredential
+
+	if err := db.Where("username = ?", username).
+		First(&user).Error; err != nil {
+		return nil
+	}
+	return &user
+}
