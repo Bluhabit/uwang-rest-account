@@ -34,3 +34,29 @@ func GetUserByUsername(username string) *entity.UserCredential {
 	}
 	return &user
 }
+
+func GetProfilePictureByUserID(userId string) *entity.UserProfile {
+	db := common.GetDbConnection()
+	if db == nil {
+		return nil
+	}
+
+	var UserProfile entity.UserProfile
+	if err := db.Where("user_id = ? AND key = 'profile-picture'", userId).
+		First(&UserProfile).Error; err != nil {
+		return nil
+	}
+	return &UserProfile
+}
+
+func CreateUserProfilePicture(userProfile *entity.UserProfile) error {
+	db := common.GetDbConnection()
+
+	return db.Create(userProfile).Error
+}
+
+func UpdateUserProfilePicture(userProfile *entity.UserProfile) error {
+	db := common.GetDbConnection()
+
+	return db.Save(userProfile).Error
+}
