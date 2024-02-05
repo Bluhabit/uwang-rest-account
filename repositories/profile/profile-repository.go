@@ -65,10 +65,7 @@ func (repo *ProfileRespository) UpdateProfileUsername(sessionId string, username
 
 	//update username ke database
 	userCredential.Username = username
-	saveUser := repo.db.Save(userCredential)
-	if saveUser == nil {
-		return response.BadRequest("", "Gagal mengupdate username.")
-	}
+	repo.db.Save(userCredential)
 	return response.Success("", "Berhasil merubah username.")
 }
 
@@ -105,10 +102,7 @@ func (repo *ProfileRespository) UpdateProfilePicture(sessionId string, profilePi
 	}
 	//update data lama
 	userProfile.Value = profilePicture
-	err := repo.db.Save(userProfile)
-	if err != nil {
-		return response.BadRequest("", "Gagal menyimpan foto profil.")
-	}
+	repo.db.Save(userProfile)
 	return response.Success("", "Berhasil merubah foto profil.")
 }
 
@@ -145,10 +139,7 @@ func (repo *ProfileRespository) UpdateProfileTopics(sessionId string, topics str
 
 	//update data lama
 	userProfile.Value = topics
-	err := repo.db.Save(userProfile)
-	if err != nil {
-		return response.BadRequest("", "Topik profil gagal disimpan")
-	}
+	repo.db.Save(userProfile)
 	return response.Success("", "Berhasil membuat topik profil")
 }
 
@@ -185,9 +176,6 @@ func (repo *ProfileRespository) UpdateProfileLevel(sessionId string, level strin
 
 	//update data lama
 	userProfile.Value = level
-	err := repo.db.Save(userProfile)
-	if err != nil {
-		return response.BadRequest("", "Gagal menyimpan level")
-	}
+	repo.db.Save(userProfile)
 	return response.Success("", "Berhasil menyimpan topic")
 }
