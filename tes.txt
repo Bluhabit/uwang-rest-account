@@ -1,0 +1,47 @@
+URL: https://api.bluhabit.id/uwang/dev/account/v1/update-profile-username
+Method: POST
+Protocol: h2
+Status: Complete
+Response: 200
+SSL: Yes
+
+Request time: Mon Feb 05 15:04:48 GMT+07:00 2024
+Response time: Mon Feb 05 15:04:48 GMT+07:00 2024
+Duration: 52 ms
+
+Request size: 30 B
+Response size: 60 B
+Total size: 90 B
+
+---------- Request ----------
+
+Accept-Language: in
+Accept: application/json
+Accept-Charset: UTF-8
+User-Agent: Ktor client
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJibHVoYWJpdC5pZCIsInN1YiI6ImFkMWUzNGRhLTA3MzYtNDk1Ni1hNTk4LTUyODU5OTI2ZWQzNiIsImlhdCI6MTcwNzEyMDI4NCwiZXhwIjoxNzA3MTIzODg0fQ.nRGhNhwU0Dae_x4gePi87pOVr0NiAtbTsDORHqxKag8
+
+{
+  "username": "triandamai"
+}
+
+---------- Response ----------
+
+date: Mon, 05 Feb 2024 08:04:49 GMT
+content-type: application/json; charset=utf-8
+x-kong-upstream-latency: 2
+x-kong-proxy-latency: 1
+via: kong/3.0.0.0-enterprise-edition
+cf-cache-status: DYNAMIC
+report-to: {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=fqmlF2cfJoJxxpUY62afwBJrvaKMlsblSuvDQnN063krO%2FFJRbuYWflNG90tJMSbBWvt7fkxK0Wz7fHPKVUNDHR78PWC8QgXG10KhTCa3KHg4palpZZSx5mGldZWHHHhp1k%3D"}],"group":"cf-nel","max_age":604800}
+nel: {"success_fraction":0,"report_to":"cf-nel","max_age":604800}
+server: cloudflare
+cf-ray: 8509a5119efa5ce3-SIN
+alt-svc: h3=":443"; ma=86400
+
+{
+  "status_code": 400,
+  "data": "",
+  "message": "Token not Provided"
+}

@@ -1,6 +1,8 @@
 package profile
 
 import (
+	"fmt"
+
 	"github.com/Bluhabit/uwang-rest-account/models"
 	"github.com/Bluhabit/uwang-rest-account/repositories/profile"
 	"github.com/gin-gonic/gin"
@@ -16,8 +18,9 @@ func UpdateProfileUsername(ctx *gin.Context) {
 	}
 	//ambil id dari token
 	sessionId := ctx.GetString("session_id")
+	fmt.Println(sessionId)
 	if len(sessionId) < 1 {
-		ctx.JSON(200, response.BadRequest("", "Token not Provided"))
+		ctx.JSON(401, response.BadRequest("", "Token not Provided"))
 		return
 	}
 	repositories := profile.Init()
