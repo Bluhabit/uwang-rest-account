@@ -1,17 +1,17 @@
 package models
 
 type UpdateProfileUsername struct {
-	Username string `json:"username"`
+	Username string `json:"username" binding:"required"`
 }
 
 type UpdateProfilePicture struct {
-	ProfilePicture string `json:"profile_picture"`
+	ProfilePicture string `json:"url" binding:"required"`
 }
 
 type UpdateProfileInterestTopic struct {
-	InterestTopic string `json:"interest_topic"`
+	InterestTopic string `json:"topics" binding:"required"`
 }
 
 type UpdateProfileLevel struct {
-	Level string `json:"level"`
+	Level string `json:"level" binding:"required"`
 }

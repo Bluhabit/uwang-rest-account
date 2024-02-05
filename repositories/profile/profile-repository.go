@@ -57,7 +57,8 @@ func (repo *ProfileRespository) UpdateProfileUsername(sessionId string, username
 	}
 
 	//jika error tidak kosong berarti ada yang pakai
-	usernameError := repo.db.Where("username=?", username).First(&userCredential).Error
+	var existingUser entity.UserCredential
+	usernameError := repo.db.Where("username=?", username).First(&existingUser).Error
 	if usernameError == nil {
 		return response.BadRequest("", "Username tidak dapat digunakan.")
 	}
@@ -195,7 +196,7 @@ func (repo *ProfileRespository) UpdateProfileLevel(sessionId string, level strin
 
 		err := repo.db.Save(newProfile)
 		if err != nil {
-			return response.BadRequest("", "topik profil gagal disimpan")
+			return response.BadRequest("", "Gagal menyimpan level")
 		}
 	}
 
@@ -203,7 +204,7 @@ func (repo *ProfileRespository) UpdateProfileLevel(sessionId string, level strin
 	userProfile.Value = level
 	err := repo.db.Save(userProfile)
 	if err != nil {
-		return response.BadRequest("", "topik profil gagal disimpan")
+		return response.BadRequest("", "Gagal menyimpan level")
 	}
-	return response.Success("", "berhasil membuat topik profil")
+	return response.Success("", "Berhasil menyimpan topic")
 }
