@@ -2,16 +2,16 @@ URL: https://api.bluhabit.id/uwang/dev/account/v1/update-profile-username
 Method: POST
 Protocol: h2
 Status: Complete
-Response: 200
+Response: 401
 SSL: Yes
 
-Request time: Mon Feb 05 15:04:48 GMT+07:00 2024
-Response time: Mon Feb 05 15:04:48 GMT+07:00 2024
+Request time: Mon Feb 05 16:24:46 GMT+07:00 2024
+Response time: Mon Feb 05 16:24:46 GMT+07:00 2024
 Duration: 52 ms
 
 Request size: 30 B
-Response size: 60 B
-Total size: 90 B
+Response size: 59 B
+Total size: 89 B
 
 ---------- Request ----------
 
@@ -20,7 +20,7 @@ Accept: application/json
 Accept-Charset: UTF-8
 User-Agent: Ktor client
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJibHVoYWJpdC5pZCIsInN1YiI6ImFkMWUzNGRhLTA3MzYtNDk1Ni1hNTk4LTUyODU5OTI2ZWQzNiIsImlhdCI6MTcwNzEyMDI4NCwiZXhwIjoxNzA3MTIzODg0fQ.nRGhNhwU0Dae_x4gePi87pOVr0NiAtbTsDORHqxKag8
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJibHVoYWJpdC5pZCIsInN1YiI6ImFkMWUzNGRhLTA3MzYtNDk1Ni1hNTk4LTUyODU5OTI2ZWQzNiIsImlhdCI6MTcwNzEyNTA4MiwiZXhwIjoxNzA3MTI4NjgyfQ.GFZ0dXrd4HISvTMLJJh8POfsAtdpSjJmDBObkCfW4dQ
 
 {
   "username": "triandamai"
@@ -28,20 +28,18 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJibHVoYWJpd
 
 ---------- Response ----------
 
-date: Mon, 05 Feb 2024 08:04:49 GMT
+date: Mon, 05 Feb 2024 09:24:48 GMT
 content-type: application/json; charset=utf-8
-x-kong-upstream-latency: 2
-x-kong-proxy-latency: 1
-via: kong/3.0.0.0-enterprise-edition
+content-length: 59
 cf-cache-status: DYNAMIC
-report-to: {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=fqmlF2cfJoJxxpUY62afwBJrvaKMlsblSuvDQnN063krO%2FFJRbuYWflNG90tJMSbBWvt7fkxK0Wz7fHPKVUNDHR78PWC8QgXG10KhTCa3KHg4palpZZSx5mGldZWHHHhp1k%3D"}],"group":"cf-nel","max_age":604800}
+report-to: {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=ssiNpEbFn%2Fnto53eg4%2Bpr2cvehB2%2B10b6TFzpFLBG%2BbT%2BsOiZBn4oa7YyTiQ57YvF5UT2CoqB9e9u%2B6JEUzUJR%2FzqAzxXUmR9EBlkucwvelJCID%2F3OYGVQsplDy0EaVFHHw%3D"}],"group":"cf-nel","max_age":604800}
 nel: {"success_fraction":0,"report_to":"cf-nel","max_age":604800}
 server: cloudflare
-cf-ray: 8509a5119efa5ce3-SIN
+cf-ray: 850a1a382a2019b0-SIN
 alt-svc: h3=":443"; ma=86400
 
 {
-  "status_code": 400,
-  "data": "",
-  "message": "Token not Provided"
+  "data": null,
+  "message": "Token not valid",
+  "status_code": 401
 }
