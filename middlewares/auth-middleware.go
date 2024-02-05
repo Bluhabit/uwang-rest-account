@@ -1,12 +1,10 @@
 package middlewares
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/Bluhabit/uwang-rest-account/common"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"strings"
 )
 
 type authHeader struct {
