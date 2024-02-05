@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/Bluhabit/uwang-rest-account/common"
+	"github.com/Bluhabit/uwang-rest-account/routes"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"log"
@@ -11,7 +12,7 @@ import (
 
 func main() {
 
-	//	common.GenerateEntity()
+	//common.GenerateEntity()
 
 	r := gin.Default()
 
@@ -37,7 +38,7 @@ func main() {
 		})
 	})
 
-	//	routes.InitRoutes(r)
+	routes.InitRoutes(r)
 
 	if err := r.Run(":8000"); err != nil {
 		log.Fatal("Gagal memulai server")
