@@ -12,10 +12,12 @@ import (
 
 func GetDbConnection() *gorm.DB {
 	var err error
-	err = godotenv.Load()
-	if err != nil {
-		fmt.Println(err)
-		return nil
+	if len(os.Getenv("DB_HOST")) < 1 {
+		err = godotenv.Load()
+		if err != nil {
+			fmt.Println(err)
+			return nil
+		}
 	}
 
 	dbHost := os.Getenv("DB_HOST")
