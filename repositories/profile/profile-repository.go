@@ -2,6 +2,7 @@ package profile
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/Bluhabit/uwang-rest-account/common"
@@ -87,6 +88,7 @@ func (repo *ProfileRespository) UpdateProfilePicture(sessionId string, profilePi
 		return response.BadRequest("", "Sesi tidak ditemukan[1]")
 	}
 
+	fmt.Printf("User Id %s", userId)
 	//jika belum ada buat data baru
 	if err := repo.db.Where("user_id = ? AND key = 'profile-picture'", userId).First(&userProfile).Error; err != nil {
 		var profilePictureID = uuid.NewString()
@@ -102,7 +104,8 @@ func (repo *ProfileRespository) UpdateProfilePicture(sessionId string, profilePi
 
 		err := repo.db.Save(newProfile)
 		if err != nil {
-			return response.BadRequest("", "topik profil gagal disimpan")
+			fmt.Println(err)
+			return response.BadRequest("", "Gagal menyimpan foto profil.")
 		}
 	}
 
@@ -110,9 +113,9 @@ func (repo *ProfileRespository) UpdateProfilePicture(sessionId string, profilePi
 	userProfile.Value = profilePicture
 	err := repo.db.Save(userProfile)
 	if err != nil {
-		return response.BadRequest("", "topik profil gagal disimpan")
+		return response.BadRequest("", "Gagal menyimpan foto profil.")
 	}
-	return response.Success("", "berhasil membuat topik profil")
+	return response.Success("", "Berhasil merubah foto profil.")
 }
 
 func (repo *ProfileRespository) UpdateProfileTopics(sessionId string, topics string) models.BaseResponse[string] {
