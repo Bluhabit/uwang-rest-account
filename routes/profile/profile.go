@@ -43,7 +43,7 @@ func UpdateProfilePicture(ctx *gin.Context) {
 		return
 	}
 	repositories := profile.Init()
-	processUpdate := repositories.UpdateProfileUsername(sessionId, updateRequest.ProfilePicture)
+	processUpdate := repositories.UpdateProfilePicture(sessionId, updateRequest.ProfilePicture)
 	ctx.JSON(200, processUpdate)
 }
 
@@ -81,6 +81,6 @@ func UpdateProfileLevel(ctx *gin.Context) {
 		return
 	}
 	repositories := profile.Init()
-	processUpdate := repositories.UpdateProfileUsername(sessionId, updateRequest.Level)
+	processUpdate := repositories.UpdateProfileLevel(sessionId, updateRequest.Level)
 	ctx.JSON(200, processUpdate)
 }
