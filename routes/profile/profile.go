@@ -1,10 +1,10 @@
-package routes
+package profile
 
 import (
 	"github.com/Bluhabit/uwang-rest-account/common"
 	"github.com/Bluhabit/uwang-rest-account/entity"
 	"github.com/Bluhabit/uwang-rest-account/models"
-	"github.com/Bluhabit/uwang-rest-account/repositories"
+	"github.com/Bluhabit/uwang-rest-account/repositories/profile"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"time"
@@ -14,6 +14,7 @@ func UpdateProfileUsername(ctx *gin.Context) {
 	// Ambil request dari user
 	var response = models.BaseResponse[string]{}
 	var updateRequest models.UpdateProfileUsername
+	repositories := profile.Init()
 
 	if err := ctx.ShouldBindJSON(&updateRequest); err != nil {
 		ctx.JSON(200, response.BadRequest("", err.Error()))
@@ -25,14 +26,13 @@ func UpdateProfileUsername(ctx *gin.Context) {
 		ctx.JSON(200, response.BadRequest("", "username sudah digunakan"))
 	}
 
-	//claims, exists := ctx.Get("user")
-	claims, exists := common.DummyToken("0ea085da-b618-42a1-8130-019195bf5e81")
-	if !exists {
+	sessionId := ctx.GetString("session_id")
+	if len(sessionId) < 1 {
 		ctx.JSON(200, response.BadRequest("", "Token not Provided"))
 		return
 	}
 
-	userCredential := repositories.GetUserProfileById(claims)
+	userCredential := repositories.GetUserProfileById(sessionId)
 
 	if userCredential == nil {
 		ctx.JSON(200, response.BadRequest("", "profil user tidak ditemukan"))
@@ -52,6 +52,7 @@ func UpdateProfileUsername(ctx *gin.Context) {
 func UpdateProfilePicture(ctx *gin.Context) {
 	var response = models.BaseResponse[string]{}
 	var updateRequest models.UpdateProfilePicture
+	repositories := profile.Init()
 
 	if err := ctx.ShouldBindJSON(&updateRequest); err != nil {
 		ctx.JSON(200, response.BadRequest("", err.Error()))
