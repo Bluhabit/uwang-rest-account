@@ -78,8 +78,8 @@ func (repo *ProfileRespository) UpdateProfilePicture(sessionId string, profilePi
 	var response = models.BaseResponse[string]{}
 
 	//ambil userId dari redis
-	redis_key := common.CreateRedisKeyUserSession(sessionId)
-	session := repo.cache.HGetAll(context.Background(), redis_key)
+	redisKey := common.CreateRedisKeyUserSession(sessionId)
+	session := repo.cache.HGetAll(context.Background(), redisKey)
 	if session == nil {
 		return response.BadRequest("", "Sesi tidak ditemukan")
 	}
@@ -93,7 +93,7 @@ func (repo *ProfileRespository) UpdateProfilePicture(sessionId string, profilePi
 	//jika belum ada buat data baru
 	if err := repo.db.Where("user_id = ? AND key = 'profile-picture'", userId).First(&userProfile).Error; err != nil {
 		var profilePictureID = uuid.NewString()
-		newProfile := &entity.UserProfile{
+		userProfile = entity.UserProfile{
 			ID:        profilePictureID,
 			Key:       "profile-picture",
 			Value:     profilePicture,
@@ -102,14 +102,7 @@ func (repo *ProfileRespository) UpdateProfilePicture(sessionId string, profilePi
 			UpdatedAt: time.Now(),
 			Deleted:   false,
 		}
-
-		err := repo.db.Save(newProfile)
-		if err != nil {
-			fmt.Println(err)
-			return response.BadRequest("", "Gagal menyimpan foto profil.")
-		}
 	}
-
 	//update data lama
 	userProfile.Value = profilePicture
 	err := repo.db.Save(userProfile)
@@ -139,7 +132,7 @@ func (repo *ProfileRespository) UpdateProfileTopics(sessionId string, topics str
 	//jika belum ada buat data baru
 	if err := repo.db.Where("user_id = ? AND key = 'topics'", userId).First(&userProfile).Error; err != nil {
 		var profilePictureID = uuid.NewString()
-		newProfile := &entity.UserProfile{
+		userProfile = entity.UserProfile{
 			ID:        profilePictureID,
 			Key:       "topics",
 			Value:     topics,
@@ -148,20 +141,15 @@ func (repo *ProfileRespository) UpdateProfileTopics(sessionId string, topics str
 			UpdatedAt: time.Now(),
 			Deleted:   false,
 		}
-
-		err := repo.db.Save(newProfile)
-		if err != nil {
-			return response.BadRequest("", "topik profil gagal disimpan")
-		}
 	}
 
 	//update data lama
 	userProfile.Value = topics
 	err := repo.db.Save(userProfile)
 	if err != nil {
-		return response.BadRequest("", "topik profil gagal disimpan")
+		return response.BadRequest("", "Topik profil gagal disimpan")
 	}
-	return response.Success("", "berhasil membuat topik profil")
+	return response.Success("", "Berhasil membuat topik profil")
 }
 
 func (repo *ProfileRespository) UpdateProfileLevel(sessionId string, level string) models.BaseResponse[string] {
@@ -184,7 +172,7 @@ func (repo *ProfileRespository) UpdateProfileLevel(sessionId string, level strin
 	//jika belum ada buat data baru
 	if err := repo.db.Where("user_id = ? AND key = 'level'", userId).First(&userProfile).Error; err != nil {
 		var profilePictureID = uuid.NewString()
-		newProfile := &entity.UserProfile{
+		userProfile = entity.UserProfile{
 			ID:        profilePictureID,
 			Key:       "level",
 			Value:     level,
@@ -192,11 +180,6 @@ func (repo *ProfileRespository) UpdateProfileLevel(sessionId string, level strin
 			CreatedAt: time.Now(),
 			UpdatedAt: time.Now(),
 			Deleted:   false,
-		}
-
-		err := repo.db.Save(newProfile)
-		if err != nil {
-			return response.BadRequest("", "Gagal menyimpan level")
 		}
 	}
 
