@@ -8,6 +8,12 @@ import (
 	"gorm.io/gorm"
 	"log"
 	"os"
+	"sync"
+)
+
+var (
+	db   *gorm.DB
+	once sync.Once
 )
 
 func GetDbConnection() *gorm.DB {
@@ -35,11 +41,13 @@ func GetDbConnection() *gorm.DB {
 		dbPort,
 	)
 
-	database, err := gorm.Open(postgres.Open(url), &gorm.Config{})
-	if err != nil {
-		log.Println("Failed connect to database")
-		return nil
+	if db == nil {
+		db, err = gorm.Open(postgres.Open(url), &gorm.Config{})
+		if err != nil {
+			log.Println("Failed connect to database")
+			return nil
+		}
+		log.Println("Successfully connected to database")
 	}
-	log.Println("Successfully connected to database")
-	return database
+	return db
 }
