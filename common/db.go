@@ -2,39 +2,52 @@ package common
 
 import (
 	"fmt"
-	"github.com/redis/go-redis/v9"
+	"github.com/joho/godotenv"
 	_ "github.com/redis/go-redis/v9"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"log"
 	"os"
-	"strconv"
+	"sync"
+)
+
+var (
+	db   *gorm.DB
+	once sync.Once
 )
 
 func GetDbConnection() *gorm.DB {
-	//dbHost := os.Getenv("DB_HOST")
-	//dbUser := os.Getenv("DB_USER")
-	//dbPassword := os.Getenv("DB_PASSWORD")
-	//dbPort := os.Getenv("DB_PORT")
-	//dbName := os.Getenv("DB_NAME")
+	var err error
+	if len(os.Getenv("DB_HOST")) < 1 {
+		err = godotenv.Load()
+		if err != nil {
+			fmt.Println(err)
+			return nil
+		}
+	}
 
-	url := fmt.Sprintf("host=localhost user=admin password=password123 dbname=uwang-dev port=5432 sslmode=disable TimeZone=Asia/Jakarta")
+	dbHost := os.Getenv("DB_HOST")
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbPort := os.Getenv("DB_PORT")
+	dbName := os.Getenv("DB_NAME")
 
-	database, _ := gorm.Open(postgres.Open(url), &gorm.Config{})
-	return database
-}
+	url := fmt.Sprintf(
+		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Jakarta",
+		dbHost,
+		dbUser,
+		dbPassword,
+		dbName,
+		dbPort,
+	)
 
-func GetRedisConnection() *redis.Client {
-	redisAdd := os.Getenv("REDIS_ADDRESS")
-	redisUser := os.Getenv("REDIS_USER")
-	redisPassword := os.Getenv("REDIS_PASSWORD")
-	redisDB, _ := strconv.ParseInt(os.Getenv("REDIS_DB"), 0, 8)
-
-	redisClient := redis.NewClient(&redis.Options{
-		Addr:     redisAdd,
-		Username: redisUser,
-		Password: redisPassword,
-		DB:       int(redisDB),
-	})
-
-	return redisClient
+	if db == nil {
+		db, err = gorm.Open(postgres.Open(url), &gorm.Config{})
+		if err != nil {
+			log.Println("Failed connect to database")
+			return nil
+		}
+		log.Println("Successfully connected to database")
+	}
+	return db
 }
