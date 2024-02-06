@@ -3,8 +3,6 @@ package profile
 import (
 	"context"
 	"fmt"
-	"time"
-
 	"github.com/Bluhabit/uwang-rest-account/common"
 	"github.com/Bluhabit/uwang-rest-account/entity"
 	"github.com/Bluhabit/uwang-rest-account/models"
@@ -12,6 +10,7 @@ import (
 	"github.com/minio/minio-go/v7"
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
+	"time"
 )
 
 type ProfileRespository struct {
@@ -90,7 +89,7 @@ func (repo *ProfileRespository) UpdateProfilePicture(sessionId string, profilePi
 	//jika belum ada buat data baru
 	if err := repo.db.Where("user_id = ? AND key = 'profile-picture'", userId).First(&userProfile).Error; err != nil {
 		var profilePictureID = uuid.NewString()
-		userProfile = entity.UserProfile{
+		userProfile := entity.UserProfile{
 			ID:        profilePictureID,
 			Key:       "profile-picture",
 			Value:     profilePicture,
@@ -99,6 +98,8 @@ func (repo *ProfileRespository) UpdateProfilePicture(sessionId string, profilePi
 			UpdatedAt: time.Now(),
 			Deleted:   false,
 		}
+		repo.db.Save(userProfile)
+		return response.Success("", "Berhasil merubah foto profil.")
 	}
 	//update data lama
 	userProfile.Value = profilePicture
@@ -126,7 +127,7 @@ func (repo *ProfileRespository) UpdateProfileTopics(sessionId string, topics str
 	//jika belum ada buat data baru
 	if err := repo.db.Where("user_id = ? AND key = 'topics'", userId).First(&userProfile).Error; err != nil {
 		var profilePictureID = uuid.NewString()
-		userProfile = entity.UserProfile{
+		userProfile := entity.UserProfile{
 			ID:        profilePictureID,
 			Key:       "topics",
 			Value:     topics,
@@ -135,6 +136,8 @@ func (repo *ProfileRespository) UpdateProfileTopics(sessionId string, topics str
 			UpdatedAt: time.Now(),
 			Deleted:   false,
 		}
+		repo.db.Save(userProfile)
+		return response.Success("", "Berhasil merubah foto profil.")
 	}
 
 	//update data lama
@@ -163,7 +166,7 @@ func (repo *ProfileRespository) UpdateProfileLevel(sessionId string, level strin
 	//jika belum ada buat data baru
 	if err := repo.db.Where("user_id = ? AND key = 'level'", userId).First(&userProfile).Error; err != nil {
 		var profilePictureID = uuid.NewString()
-		userProfile = entity.UserProfile{
+		userProfile := entity.UserProfile{
 			ID:        profilePictureID,
 			Key:       "level",
 			Value:     level,
@@ -172,6 +175,8 @@ func (repo *ProfileRespository) UpdateProfileLevel(sessionId string, level strin
 			UpdatedAt: time.Now(),
 			Deleted:   false,
 		}
+		repo.db.Save(userProfile)
+		return response.Success("", "Berhasil menyimpan topic")
 	}
 
 	//update data lama
