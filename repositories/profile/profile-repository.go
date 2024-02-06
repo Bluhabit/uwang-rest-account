@@ -89,7 +89,7 @@ func (repo *ProfileRespository) UpdateProfilePicture(sessionId string, profilePi
 	//jika belum ada buat data baru
 	if err := repo.db.Where("user_id = ? AND key = 'profile-picture'", userId).First(&userProfile).Error; err != nil {
 		var profilePictureID = uuid.NewString()
-		newProfile := entity.UserProfile{
+		newProfile := &entity.UserProfile{
 			ID:        profilePictureID,
 			Key:       "profile-picture",
 			Value:     profilePicture,
@@ -127,7 +127,7 @@ func (repo *ProfileRespository) UpdateProfileTopics(sessionId string, topics str
 	//jika belum ada buat data baru
 	if err := repo.db.Where("user_id = ? AND key = 'topics'", userId).First(&userProfile).Error; err != nil {
 		var profilePictureID = uuid.NewString()
-		newProfile := entity.UserProfile{
+		newProfile := &entity.UserProfile{
 			ID:        profilePictureID,
 			Key:       "topics",
 			Value:     topics,
@@ -166,7 +166,7 @@ func (repo *ProfileRespository) UpdateProfileLevel(sessionId string, level strin
 	//jika belum ada buat data baru
 	if err := repo.db.Where("user_id = ? AND key = 'level'", userId).First(&userProfile).Error; err != nil {
 		var profilePictureID = uuid.NewString()
-		newProfile := entity.UserProfile{
+		newProfile := &entity.UserProfile{
 			ID:        profilePictureID,
 			Key:       "level",
 			Value:     level,
