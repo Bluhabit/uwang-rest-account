@@ -12,7 +12,7 @@ const TableNameUserCredential = "user_credential"
 
 // UserCredential mapped from table <user_credential>
 type UserCredential struct {
-	ID           string    `gorm:"column:id;primaryKey" json:"id"`
+	ID           string    `gorm:"column:id;primaryKey;default:562f6aca-a2e0-488b-93f5-3a0bdb17053d" json:"id"`
 	Email        string    `gorm:"column:email;not null" json:"email"`
 	Password     string    `gorm:"column:password;not null" json:"password"`
 	Username     string    `gorm:"column:username;not null" json:"username"`

@@ -8,19 +8,19 @@ import (
 	"time"
 )
 
-const TableNameHashtag = "hashtag"
+const TableNameAdminRole = "admin_role"
 
-// Hashtag mapped from table <hashtag>
-type Hashtag struct {
-	Hashtag   string    `gorm:"column:hashtag" json:"hashtag"`
-	ID        string    `gorm:"column:id;primaryKey" json:"id"`
-	Value     string    `gorm:"column:value" json:"value"`
+// AdminRole mapped from table <admin_role>
+type AdminRole struct {
+	ID        string    `gorm:"column:id;primaryKey;default:71155eb6-a7da-45c7-8a77-0adf5a327c52" json:"id"`
+	AdminID   string    `gorm:"column:admin_id" json:"admin_id"`
+	AccessID  string    `gorm:"column:access_id" json:"access_id"`
 	CreatedAt time.Time `gorm:"column:created_at;not null;default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt time.Time `gorm:"column:updated_at;not null;default:CURRENT_TIMESTAMP" json:"updated_at"`
 	Deleted   bool      `gorm:"column:deleted;not null" json:"deleted"`
 }
 
-// TableName Hashtag's table name
-func (*Hashtag) TableName() string {
-	return TableNameHashtag
+// TableName AdminRole's table name
+func (*AdminRole) TableName() string {
+	return TableNameAdminRole
 }

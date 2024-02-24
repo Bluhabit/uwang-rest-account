@@ -8,19 +8,21 @@ import (
 	"time"
 )
 
-const TableNamePostMention = "post_mention"
+const TableNameUserLog = "user_log"
 
-// PostMention mapped from table <post_mention>
-type PostMention struct {
-	ID        string    `gorm:"column:id;primaryKey" json:"id"`
-	PostID    string    `gorm:"column:post_id" json:"post_id"`
+// UserLog mapped from table <user_log>
+type UserLog struct {
+	ID        string    `gorm:"column:id;primaryKey;default:e8f256e3-3760-4e09-883b-bfab619e4bd6" json:"id"`
 	UserID    string    `gorm:"column:user_id" json:"user_id"`
+	LogType   string    `gorm:"column:log_type" json:"log_type"`
+	Title     string    `gorm:"column:title" json:"title"`
+	Body      string    `gorm:"column:body" json:"body"`
 	CreatedAt time.Time `gorm:"column:created_at;not null;default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt time.Time `gorm:"column:updated_at;not null;default:CURRENT_TIMESTAMP" json:"updated_at"`
 	Deleted   bool      `gorm:"column:deleted;not null" json:"deleted"`
 }
 
-// TableName PostMention's table name
-func (*PostMention) TableName() string {
-	return TableNamePostMention
+// TableName UserLog's table name
+func (*UserLog) TableName() string {
+	return TableNameUserLog
 }

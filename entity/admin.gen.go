@@ -12,8 +12,9 @@ const TableNameAdmin = "admin"
 
 // Admin mapped from table <admin>
 type Admin struct {
-	ID        string    `gorm:"column:id;primaryKey" json:"id"`
-	UserID    string    `gorm:"column:user_id" json:"user_id"`
+	ID        string    `gorm:"column:id;primaryKey;default:4c7fef85-70ac-43e9-bd06-3a706690277d" json:"id"`
+	UserID    string    `gorm:"column:user_id;not null" json:"user_id"`
+	Password  string    `gorm:"column:password;not null" json:"password"`
 	CreatedAt time.Time `gorm:"column:created_at;not null;default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt time.Time `gorm:"column:updated_at;not null;default:CURRENT_TIMESTAMP" json:"updated_at"`
 	Deleted   bool      `gorm:"column:deleted;not null" json:"deleted"`

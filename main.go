@@ -12,7 +12,7 @@ import (
 
 func main() {
 
-	//common.GenerateEntity()
+	common.GenerateEntity()
 
 	r := gin.Default()
 
