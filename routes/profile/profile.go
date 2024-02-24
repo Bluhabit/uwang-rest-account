@@ -84,3 +84,17 @@ func UpdateProfileLevel(ctx *gin.Context) {
 	processUpdate := repositories.UpdateProfileLevel(sessionId, updateRequest.Level)
 	ctx.JSON(200, processUpdate)
 }
+
+func DetailUserResponse(ctx *gin.Context) {
+	var response = models.BaseResponse[string]{}
+
+	id, ok := ctx.GetQuery("detail")
+
+	if !ok {
+		ctx.JSON(200, response.BadRequest("", "User tidak ditemukan"))
+	}
+
+	repo := profile.Init()
+	data := repo.GetAllDetailUser(id)
+	ctx.JSON(200, data)
+}
