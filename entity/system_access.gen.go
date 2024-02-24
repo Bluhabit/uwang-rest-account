@@ -12,7 +12,7 @@ const TableNameSystemAccess = "system_access"
 
 // SystemAccess mapped from table <system_access>
 type SystemAccess struct {
-	ID         string    `gorm:"column:id;primaryKey" json:"id"`
+	ID         string    `gorm:"column:id;primaryKey;default:fc16f3ae-8ac7-4888-9fc0-f238a6c4e364" json:"id"`
 	Name       string    `gorm:"column:name;not null" json:"name"`
 	Permission string    `gorm:"column:permission;not null" json:"permission"`
 	Group      string    `gorm:"column:group;not null" json:"group"`

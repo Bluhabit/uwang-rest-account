@@ -12,7 +12,7 @@ const TableNamePost = "post"
 
 // Post mapped from table <post>
 type Post struct {
-	ID            string    `gorm:"column:id;primaryKey" json:"id"`
+	ID            string    `gorm:"column:id;primaryKey;default:ab633712-d1ff-4e86-852b-3e0a27f71e9f" json:"id"`
 	CreatedBy     string    `gorm:"column:created_by" json:"created_by"`
 	PostID        string    `gorm:"column:post_id" json:"post_id"`
 	Body          string    `gorm:"column:body" json:"body"`
