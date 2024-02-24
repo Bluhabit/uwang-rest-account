@@ -186,24 +186,12 @@ func (repo *ProfileRespository) UpdateProfileLevel(sessionId string, level strin
 	return response.Success("", "Berhasil menyimpan topic")
 }
 
-func (repo *ProfileRespository) GetAllDetailUser(sessionId string) models.BaseResponse[models.DetailUserResponse] {
+func (repo *ProfileRespository) GetAllDetailUser(userId string) models.BaseResponse[models.DetailUserResponse] {
 	//prepare data
 	var userCredential entity.UserCredential
 	var userProfile []entity.UserProfile
 	var responseDetailUser models.DetailUserResponse = models.DetailUserResponse{}
 	var response = models.BaseResponse[models.DetailUserResponse]{}
-
-	// ambil UserId dari redis
-	redis_key := common.CreateRedisKeyUserSession(sessionId)
-	session := repo.cache.HGetAll(context.Background(), redis_key)
-	if session == nil {
-		return response.BadRequest(responseDetailUser, "Sesi tidak ditemukan")
-	}
-	user := session.Val()
-	userId := user["user_id"]
-	if len(userId) < 1 {
-		return response.BadRequest(responseDetailUser, "Sesi tidak ditemukan [1]")
-	}
 
 	// Jika blm ada data, buat data baru
 	if err := repo.db.Where("user_id = ?", userId).First(&userCredential).Error; err != nil {
