@@ -24,12 +24,12 @@ type DetailUserResponse struct {
 	Password     string                `json:"password"`
 	FullName     string                `json:"full_name"`
 	UserName     string                `json:"username"`
-	DateOfBirth  time.Time                `json:"dateOfBirth"`
+	DateOfBirth  time.Time             `json:"dateOfBirth"`
 	AuthProvider string                `json:"authProvider"`
 	Status       string                `json:"status"`
-	CreatedAt    time.Time                `json:"createdAt"`
-	UpdatedAt    time.Time                `json:"updatedAt"`
-	Deleted      bool                `json:"deleted"`
+	CreatedAt    time.Time             `json:"createdAt"`
+	UpdatedAt    time.Time             `json:"updatedAt"`
+	Deleted      bool                  `json:"deleted"`
 	UserProfile  []UserProfileResponse `json:"user_profile"`
 }
 
