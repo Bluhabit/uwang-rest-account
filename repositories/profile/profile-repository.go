@@ -3,6 +3,7 @@ package profile
 import (
 	"context"
 	"fmt"
+	"math"
 	"time"
 
 	"github.com/Bluhabit/uwang-rest-account/common"
@@ -228,3 +229,37 @@ func (repo *ProfileRespository) GetAllDetailUser(userId string) models.BaseRespo
 	return response.Success(responseDetailUser, "Berhasil mengambil detail user")
 
 }
+
+func Paginate(value interface{}, pagination *models.Pagination, repo *gorm.DB) func(repo *gorm.DB) *gorm.DB {
+	var totalRows int64
+	repo.Model(value).Count(&totalRows)
+
+	pagination.TotalRows = totalRows
+	totalPages := int(math.Ceil(float64(totalRows) / float64(pagination.Limit)))
+	pagination.TotalPages = totalPages
+
+	return func(repo *gorm.DB) *gorm.DB {
+		return repo.Offset(pagination.GetOffset()).Limit(pagination.GetLimit()).Order(pagination.GetSort())
+	}
+}
+
+func (repo *ProfileRespository) ListUserResponse(pagination models.Pagination) (*models.Pagination) {
+	var listUserResponse models.ListUserResponse = models.ListUserResponse{}
+	var list []models.ListUserResponse
+
+	repo.db.Scopes(Paginate(listUserResponse, &pagination, repo.db)).Find(listUserResponse)
+	pagination.Rows = list
+
+	return &pagination
+}
+
+// func (repo *ProfileRespository) ListUser(pagination models.Pagination) (*models.Pagination, error) {
+// 	var list []*ListGorm
+	
+
+// 	repo.db.Scopes(Paginate(list, &pagination, repo.db)).Find(&list)
+// 	pagination.Rows = []models.ListUserResponse{}
+
+
+// 	return &pagination, nil
+// }

@@ -19,3 +19,16 @@ func DetailUserResponse(ctx *gin.Context) {
 	data := repo.GetAllDetailUser(id)
 	ctx.JSON(200, data)
 }
+
+func GetListUser(ctx *gin.Context) {
+	var response = models.BaseResponse[string]{}
+
+	_, ok := ctx.GetQuery("list")
+	if !ok {
+		ctx.JSON(200,response.BadRequest("","List tidak didapatkan"))
+	}
+
+	repo := profile.Init()
+	data := repo.ListUserResponse(models.Pagination{})
+	ctx.JSON(200, data)
+}
