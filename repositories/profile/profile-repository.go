@@ -3,6 +3,8 @@ package profile
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/Bluhabit/uwang-rest-account/common"
 	"github.com/Bluhabit/uwang-rest-account/entity"
 	"github.com/Bluhabit/uwang-rest-account/models"
@@ -10,7 +12,6 @@ import (
 	"github.com/minio/minio-go/v7"
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
-	"time"
 )
 
 type ProfileRespository struct {
@@ -183,4 +184,48 @@ func (repo *ProfileRespository) UpdateProfileLevel(sessionId string, level strin
 	userProfile.Value = level
 	repo.db.Save(userProfile)
 	return response.Success("", "Berhasil menyimpan topic")
+}
+
+func (repo *ProfileRespository) GetAllDetailUser(userId string) models.BaseResponse[models.DetailUserResponse] {
+	//prepare data
+	var userCredential entity.UserCredential
+	var userProfile []entity.UserProfile
+	var responseDetailUser models.DetailUserResponse = models.DetailUserResponse{}
+	var response = models.BaseResponse[models.DetailUserResponse]{}
+
+	// Jika blm ada data, buat data baru
+	if err := repo.db.Where("user_id = ?", userId).First(&userCredential).Error; err != nil {
+		return response.BadRequest(responseDetailUser, "Sesi tidak ditemukan")
+	}
+	if err := repo.db.Where("user_id = ?", userId).Find(&userProfile).Error; err != nil {
+		return response.BadRequest(responseDetailUser, "Sesi tidak ditemukan")
+	}
+
+	var userProfileResponse []models.UserProfileResponse
+
+	for _, profile := range userProfile {
+		userProfileResponse = append(userProfileResponse, models.UserProfileResponse{
+			Id:    profile.ID,
+			Key:   profile.Key,
+			Value: profile.Value,
+		})
+	}
+
+	responseDetailUser = models.DetailUserResponse{
+		Id:           userCredential.ID,
+		Email:        userCredential.Email,
+		Password:     userCredential.Password,
+		FullName:     userCredential.FullName,
+		UserName:     userCredential.Username,
+		DateOfBirth:  userCredential.DateOfBirth,
+		AuthProvider: userCredential.AuthProvider,
+		Status:       userCredential.Status,
+		CreatedAt:    userCredential.CreatedAt,
+		UpdatedAt:    userCredential.UpdatedAt,
+		Deleted:      userCredential.Deleted,
+		UserProfile:  userProfileResponse,
+	}
+
+	return response.Success(responseDetailUser, "Berhasil mengambil detail user")
+
 }
