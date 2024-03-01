@@ -12,7 +12,7 @@ const TableNameAdminRole = "admin_role"
 
 // AdminRole mapped from table <admin_role>
 type AdminRole struct {
-	ID        string    `gorm:"column:id;primaryKey;default:71155eb6-a7da-45c7-8a77-0adf5a327c52" json:"id"`
+	ID        string    `gorm:"column:id;primaryKey;default:2683aeba-1ef0-41a0-af43-2263772b69c7" json:"id"`
 	AdminID   string    `gorm:"column:admin_id" json:"admin_id"`
 	AccessID  string    `gorm:"column:access_id" json:"access_id"`
 	CreatedAt time.Time `gorm:"column:created_at;not null;default:CURRENT_TIMESTAMP" json:"created_at"`

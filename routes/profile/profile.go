@@ -98,3 +98,17 @@ func DetailUserResponse(ctx *gin.Context) {
 	data := repo.GetAllDetailUser(id)
 	ctx.JSON(200, data)
 }
+
+func GetDetailProfile(ctx *gin.Context) {
+	var user = models.UserCredentialResponse{}
+	var response models.BaseResponse[models.UserCredentialResponse]
+	repo := profile.Init()
+
+	sessionId := ctx.GetString("session_id")
+	if len(sessionId) < 1 {
+		ctx.JSON(200, response.BadRequest(user, "Token not Provided"))
+		return
+	}
+	data := repo.GetProfile(sessionId)
+	ctx.JSON(200, data)
+}
