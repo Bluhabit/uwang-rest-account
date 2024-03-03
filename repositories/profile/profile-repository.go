@@ -193,7 +193,6 @@ func (repo *ProfileRespository) GetAllDetailUser(userId string) models.BaseRespo
 	var responseDetailUser models.UserCredentialResponse = models.UserCredentialResponse{}
 	var response = models.BaseResponse[models.UserCredentialResponse]{}
 
-	// Jika blm ada data, buat data baru
 	if err := repo.db.Where("user_id = ?", userId).First(&userCredential).Error; err != nil {
 		return response.BadRequest(responseDetailUser, "Sesi tidak ditemukan")
 	}
@@ -226,7 +225,6 @@ func (repo *ProfileRespository) GetAllDetailUser(userId string) models.BaseRespo
 	}
 
 	return response.Success(responseDetailUser, "Berhasil mengambil detail user")
-
 }
 
 func (repo *ProfileRespository) GetProfile(sessionId string) models.BaseResponse[models.UserCredentialResponse] {
