@@ -3,6 +3,7 @@ package user
 import (
 	"github.com/Bluhabit/uwang-rest-account/models"
 	"github.com/Bluhabit/uwang-rest-account/repositories/profile"
+	"github.com/Bluhabit/uwang-rest-account/repositories/user"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,15 +21,11 @@ func DetailUserResponse(ctx *gin.Context) {
 	ctx.JSON(200, data)
 }
 
-func GetListUser(ctx *gin.Context) {
-	var response = models.BaseResponse[string]{}
+func GetListUserWithPaginate(ctx *gin.Context) {
+	page := ctx.DefaultQuery("page", "1")
+	size := ctx.DefaultQuery("size", "1")
 
-	_, ok := ctx.GetQuery("list")
-	if !ok {
-		ctx.JSON(200,response.BadRequest("","List tidak didapatkan"))
-	}
-
-	repo := profile.Init()
-	data := repo.ListUserResponse(models.Pagination{})
-	ctx.JSON(200, data)
+	repo := user.Init()
+	data := repo.GetListUser(page, size)
+	ctx.JSON(200,data)
 }
