@@ -16,5 +16,7 @@ func InitRoutes(router *gin.Engine) {
 		v1.POST("/update-profile-level", middlewares.AuthMiddleware(), profile.UpdateProfileLevel)
 		v1.GET("/users", user.DetailUserResponse)
 		v1.GET("/listUsers", user.GetListUserWithPaginate)
+		v1.GET("/users", profile.DetailUserResponse)
+		v1.GET("/profile", middlewares.AuthMiddleware(), profile.GetDetailProfile)
 	}
 }

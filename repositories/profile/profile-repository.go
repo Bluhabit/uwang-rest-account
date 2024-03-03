@@ -186,12 +186,12 @@ func (repo *ProfileRespository) UpdateProfileLevel(sessionId string, level strin
 	return response.Success("", "Berhasil menyimpan topic")
 }
 
-func (repo *ProfileRespository) GetAllDetailUser(userId string) models.BaseResponse[models.DetailUserResponse] {
+func (repo *ProfileRespository) GetAllDetailUser(userId string) models.BaseResponse[models.UserCredentialResponse] {
 	//prepare data
 	var userCredential entity.UserCredential
 	var userProfile []entity.UserProfile
-	var responseDetailUser models.DetailUserResponse = models.DetailUserResponse{}
-	var response = models.BaseResponse[models.DetailUserResponse]{}
+	var responseDetailUser models.UserCredentialResponse = models.UserCredentialResponse{}
+	var response = models.BaseResponse[models.UserCredentialResponse]{}
 
 	if err := repo.db.Where("user_id = ?", userId).First(&userCredential).Error; err != nil {
 		return response.BadRequest(responseDetailUser, "Sesi tidak ditemukan")
@@ -210,10 +210,9 @@ func (repo *ProfileRespository) GetAllDetailUser(userId string) models.BaseRespo
 		})
 	}
 
-	responseDetailUser = models.DetailUserResponse{
+	responseDetailUser = models.UserCredentialResponse{
 		Id:           userCredential.ID,
 		Email:        userCredential.Email,
-		Password:     userCredential.Password,
 		FullName:     userCredential.FullName,
 		UserName:     userCredential.Username,
 		DateOfBirth:  userCredential.DateOfBirth,
@@ -226,5 +225,55 @@ func (repo *ProfileRespository) GetAllDetailUser(userId string) models.BaseRespo
 	}
 
 	return response.Success(responseDetailUser, "Berhasil mengambil detail user")
+}
 
+func (repo *ProfileRespository) GetProfile(sessionId string) models.BaseResponse[models.UserCredentialResponse] {
+	var response = models.BaseResponse[models.UserCredentialResponse]{}
+	var userCredentialResponse = models.UserCredentialResponse{}
+	var userProfileResponse []models.UserProfileResponse
+
+	//ambil userId dari redis
+	redis_key := common.CreateRedisKeyUserSession(sessionId)
+	session := repo.cache.HGetAll(context.Background(), redis_key)
+	if session == nil {
+		return response.BadRequest(userCredentialResponse, "Sesi tidak ditemukan")
+	}
+	user := session.Val()
+	userId := user["user_id"]
+	if len(userId) < 1 {
+		return response.BadRequest(userCredentialResponse, "Sesi tidak ditemukan[1]")
+	}
+
+	var userProfile []entity.UserProfile
+	var userCredential entity.UserCredential
+
+	if err := repo.db.Where("user_id = ?", userId).First(&userCredential).Error; err != nil {
+		return response.BadRequest(userCredentialResponse, "Sesi tidak ditemukan")
+	}
+	if err := repo.db.Where("user_id = ?", userId).Find(&userProfile).Error; err != nil {
+		return response.BadRequest(userCredentialResponse, "")
+	}
+
+	for _, profile := range userProfile {
+		userProfileResponse = append(userProfileResponse, models.UserProfileResponse{
+			Id:    profile.ID,
+			Key:   profile.Key,
+			Value: profile.Value,
+		})
+	}
+
+	userCredentialResponse = models.UserCredentialResponse{
+		Id:           userCredential.ID,
+		Email:        userCredential.Email,
+		FullName:     userCredential.FullName,
+		UserName:     userCredential.Username,
+		DateOfBirth:  userCredential.DateOfBirth,
+		AuthProvider: userCredential.AuthProvider,
+		Status:       userCredential.Status,
+		CreatedAt:    userCredential.CreatedAt,
+		UpdatedAt:    userCredential.UpdatedAt,
+		Deleted:      userCredential.Deleted,
+		UserProfile:  userProfileResponse,
+	}
+	return response.Success(userCredentialResponse, "Menampilkan profile")
 }

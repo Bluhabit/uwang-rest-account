@@ -18,10 +18,9 @@ type UpdateProfileLevel struct {
 	Level string `json:"level" binding:"required"`
 }
 
-type DetailUserResponse struct {
+type UserCredentialResponse struct {
 	Id           string                `json:"id"`
 	Email        string                `json:"email"`
-	Password     string                `json:"password"`
 	FullName     string                `json:"full_name"`
 	UserName     string                `json:"username"`
 	DateOfBirth  time.Time             `json:"dateOfBirth"`

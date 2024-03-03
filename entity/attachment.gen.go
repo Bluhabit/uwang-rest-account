@@ -12,7 +12,7 @@ const TableNameAttachment = "attachment"
 
 // Attachment mapped from table <attachment>
 type Attachment struct {
-	ID             string    `gorm:"column:id;primaryKey;default:4125fc89-2dc4-4f67-bc1f-8dcf3d4c7a31" json:"id"`
+	ID             string    `gorm:"column:id;primaryKey;default:2d75caf1-de6c-4297-85b8-ada768d65210" json:"id"`
 	PostID         string    `gorm:"column:post_id" json:"post_id"`
 	AttachmentType string    `gorm:"column:attachment_type" json:"attachment_type"`
 	MimeType       string    `gorm:"column:mime_type;not null" json:"mime_type"`
