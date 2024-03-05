@@ -85,21 +85,7 @@ func UpdateProfileLevel(ctx *gin.Context) {
 	ctx.JSON(200, processUpdate)
 }
 
-func DetailUserResponse(ctx *gin.Context) {
-	var response = models.BaseResponse[string]{}
-
-	id, ok := ctx.GetQuery("detail")
-
-	if !ok {
-		ctx.JSON(200, response.BadRequest("", "User tidak ditemukan"))
-	}
-
-	repo := profile.Init()
-	data := repo.GetAllDetailUser(id)
-	ctx.JSON(200, data)
-}
-
-func GetDetailProfile(ctx *gin.Context) {
+func GetProfile(ctx *gin.Context) {
 	var user = models.UserCredentialResponse{}
 	var response models.BaseResponse[models.UserCredentialResponse]
 	repo := profile.Init()
@@ -110,5 +96,25 @@ func GetDetailProfile(ctx *gin.Context) {
 		return
 	}
 	data := repo.GetProfile(sessionId)
+	ctx.JSON(200, data)
+}
+
+func UpdateProfile(ctx *gin.Context) {
+	var user = models.UserCredentialResponse{}
+	var request = models.UpdateProfileRequest{}
+	var response models.BaseResponse[models.UserCredentialResponse]
+	repo := profile.Init()
+
+	if err := ctx.ShouldBindJSON(&request); err != nil {
+		ctx.JSON(200, response.BadRequest(user, err.Error()))
+		return
+	}
+
+	sessionId := ctx.GetString("session_id")
+	if len(sessionId) < 1 {
+		ctx.JSON(200, response.BadRequest(user, "Token not Provided"))
+		return
+	}
+	data := repo.UpdateProfile(sessionId, request)
 	ctx.JSON(200, data)
 }

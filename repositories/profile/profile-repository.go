@@ -186,49 +186,6 @@ func (repo *ProfileRespository) UpdateProfileLevel(sessionId string, level strin
 	return response.Success("", "Berhasil menyimpan topic")
 }
 
-func (repo *ProfileRespository) GetAllDetailUser(userId string) models.BaseResponse[models.UserCredentialResponse] {
-	//prepare data
-	var userCredential entity.UserCredential
-	var userProfile []entity.UserProfile
-	var responseDetailUser models.UserCredentialResponse = models.UserCredentialResponse{}
-	var response = models.BaseResponse[models.UserCredentialResponse]{}
-
-	// Jika blm ada data, buat data baru
-	if err := repo.db.Where("user_id = ?", userId).First(&userCredential).Error; err != nil {
-		return response.BadRequest(responseDetailUser, "Sesi tidak ditemukan")
-	}
-	if err := repo.db.Where("user_id = ?", userId).Find(&userProfile).Error; err != nil {
-		return response.BadRequest(responseDetailUser, "Sesi tidak ditemukan")
-	}
-
-	var userProfileResponse []models.UserProfileResponse
-
-	for _, profile := range userProfile {
-		userProfileResponse = append(userProfileResponse, models.UserProfileResponse{
-			Id:    profile.ID,
-			Key:   profile.Key,
-			Value: profile.Value,
-		})
-	}
-
-	responseDetailUser = models.UserCredentialResponse{
-		Id:           userCredential.ID,
-		Email:        userCredential.Email,
-		FullName:     userCredential.FullName,
-		UserName:     userCredential.Username,
-		DateOfBirth:  userCredential.DateOfBirth,
-		AuthProvider: userCredential.AuthProvider,
-		Status:       userCredential.Status,
-		CreatedAt:    userCredential.CreatedAt,
-		UpdatedAt:    userCredential.UpdatedAt,
-		Deleted:      userCredential.Deleted,
-		UserProfile:  userProfileResponse,
-	}
-
-	return response.Success(responseDetailUser, "Berhasil mengambil detail user")
-
-}
-
 func (repo *ProfileRespository) GetProfile(sessionId string) models.BaseResponse[models.UserCredentialResponse] {
 	var response = models.BaseResponse[models.UserCredentialResponse]{}
 	var userCredentialResponse = models.UserCredentialResponse{}
@@ -278,4 +235,119 @@ func (repo *ProfileRespository) GetProfile(sessionId string) models.BaseResponse
 		UserProfile:  userProfileResponse,
 	}
 	return response.Success(userCredentialResponse, "Menampilkan profile")
+}
+
+func (repo *ProfileRespository) UpdateProfile(sessionId string, request models.UpdateProfileRequest) models.BaseResponse[models.UserCredentialResponse] {
+	var response = models.BaseResponse[models.UserCredentialResponse]{}
+	var userCredentialResponse = models.UserCredentialResponse{}
+	var userCredential entity.UserCredential
+	var userProfile entity.UserProfile
+	var profiles []models.UserProfileResponse
+
+	//ambil userId dari redis
+	redisKey := common.CreateRedisKeyUserSession(sessionId)
+	session := repo.cache.HGetAll(context.Background(), redisKey)
+	if session == nil {
+		return response.BadRequest(userCredentialResponse, "Sesi tidak ditemukan")
+	}
+	user := session.Val()
+	userId := user["user_id"]
+	if len(userId) < 1 {
+		return response.BadRequest(userCredentialResponse, "Sesi tidak ditemukan[1]")
+	}
+
+	err := repo.db.Where("id=?", userId).First(&userCredential).Error
+	if err != nil {
+		return response.BadRequest(userCredentialResponse, "User tidak ditemukan")
+	}
+
+	userCredential.Username = request.Username
+	userCredential.FullName = request.FullName
+	err = repo.db.Save(&userCredential).Error
+	if err != nil {
+		return response.BadRequest(userCredentialResponse, "Gagal mengupdate profile")
+	}
+
+	//other profile
+	// region bio
+	err = repo.db.Where("user_id=? AND key='bio'", userId).First(&userProfile).Error
+	if err != nil {
+		var profileId = uuid.NewString()
+		userProfile = entity.UserProfile{
+			ID:        profileId,
+			Key:       "bio",
+			Value:     request.Bio,
+			UserID:    userId,
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
+			Deleted:   false,
+		}
+	}
+
+	userProfile.Value = request.Bio
+	err = repo.db.Save(&userProfile).Error
+	if err != nil {
+		return response.BadRequest(userCredentialResponse, "Gagal mengupdate profile")
+	}
+
+	profiles = append(profiles, models.UserProfileResponse{
+		Id:    userProfile.ID,
+		Key:   userProfile.Key,
+		Value: userProfile.Value,
+	})
+	//end region
+	//region topics
+	err = repo.db.Where("user_id=? AND key='topics'", userId).First(&userProfile).Error
+	if err != nil {
+		var profileId = uuid.NewString()
+		userProfile = entity.UserProfile{
+			ID:        profileId,
+			Key:       "topics",
+			Value:     request.InterestTopic,
+			UserID:    userId,
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
+			Deleted:   false,
+		}
+	}
+
+	userProfile.Value = request.InterestTopic
+	err = repo.db.Save(&userProfile).Error
+	if err != nil {
+		return response.BadRequest(userCredentialResponse, "Gagal mengupdate profile")
+	}
+	profiles = append(profiles, models.UserProfileResponse{
+		Id:    userProfile.ID,
+		Key:   userProfile.Key,
+		Value: userProfile.Value,
+	})
+	//end topics
+	//region link
+	err = repo.db.Where("user_id=? AND key='link'", userId).First(&userProfile).Error
+	if err != nil {
+		var profileId = uuid.NewString()
+		userProfile = entity.UserProfile{
+			ID:        profileId,
+			Key:       "link",
+			Value:     request.Link,
+			UserID:    userId,
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
+			Deleted:   false,
+		}
+	}
+
+	userProfile.Value = request.Link
+	err = repo.db.Save(&userProfile).Error
+	if err != nil {
+		return response.BadRequest(userCredentialResponse, "Gagal mengupdate profile")
+	}
+	profiles = append(profiles, models.UserProfileResponse{
+		Id:    userProfile.ID,
+		Key:   userProfile.Key,
+		Value: userProfile.Value,
+	})
+	//end region
+
+	return response.Success(userCredentialResponse, "Berhasil")
 }
