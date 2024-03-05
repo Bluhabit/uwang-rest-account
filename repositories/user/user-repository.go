@@ -76,3 +76,72 @@ func (repo *UserRespository) GetListUser(page string, size string) models.BaseRe
 	return response.Success(UserCredentialResponse, "Berhasil mengambil data")
 
 }
+
+func (repo *UserRespository) GetDetailUser(userId string) models.BaseResponse[models.UserCredentialResponse] {
+	//prepare data
+	var userCredential entity.UserCredential
+	var userProfile []entity.UserProfile
+	var responseDetailUser = models.UserCredentialResponse{}
+	var response = models.BaseResponse[models.UserCredentialResponse]{}
+
+	if err := repo.db.Where("user_id = ?", userId).First(&userCredential).Error; err != nil {
+		return response.BadRequest(responseDetailUser, "Sesi tidak ditemukan")
+	}
+	if err := repo.db.Where("user_id = ?", userId).Find(&userProfile).Error; err != nil {
+		return response.BadRequest(responseDetailUser, "Sesi tidak ditemukan")
+	}
+
+	var userProfileResponse []models.UserProfileResponse
+
+	for _, profile := range userProfile {
+		userProfileResponse = append(userProfileResponse, models.UserProfileResponse{
+			Id:    profile.ID,
+			Key:   profile.Key,
+			Value: profile.Value,
+		})
+	}
+
+	responseDetailUser = models.UserCredentialResponse{
+		Id:           userCredential.ID,
+		Email:        userCredential.Email,
+		FullName:     userCredential.FullName,
+		UserName:     userCredential.Username,
+		DateOfBirth:  userCredential.DateOfBirth,
+		AuthProvider: userCredential.AuthProvider,
+		Status:       userCredential.Status,
+		CreatedAt:    userCredential.CreatedAt,
+		UpdatedAt:    userCredential.UpdatedAt,
+		Deleted:      userCredential.Deleted,
+		UserProfile:  userProfileResponse,
+	}
+
+	return response.Success(responseDetailUser, "Berhasil mengambil detail user")
+}
+
+func (repo *UserRespository) GetTopUser() models.BaseResponse[[]models.UserCredentialResponse] {
+	var userCredential []entity.UserCredential
+	var UserCredentialResponse []models.UserCredentialResponse
+	var response = models.BaseResponse[[]models.UserCredentialResponse]{}
+
+	err := repo.db.Where("ORDER By created_at DESC").Find(&userCredential).Error
+	if err != nil {
+		return response.BadRequest(UserCredentialResponse, "Tidak dapat mengambil data")
+	}
+	for _, userCredential := range userCredential {
+		UserCredentialResponse = append(UserCredentialResponse, models.UserCredentialResponse{
+			Id:           userCredential.ID,
+			Email:        userCredential.Email,
+			FullName:     userCredential.FullName,
+			UserName:     userCredential.Username,
+			DateOfBirth:  userCredential.DateOfBirth,
+			AuthProvider: userCredential.AuthProvider,
+			Status:       userCredential.Status,
+			CreatedAt:    userCredential.CreatedAt,
+			UpdatedAt:    userCredential.UpdatedAt,
+			Deleted:      userCredential.Deleted,
+		})
+
+	}
+	return response.Success(UserCredentialResponse, "Berhasil mengambil data")
+
+}
