@@ -77,6 +77,32 @@ func (repo *UserRespository) GetListUser(page string, size string) models.BaseRe
 
 }
 
+func (repo *UserRespository) GetListUserByQuery(query string) models.BaseResponse[[]models.UserCredentialResponse] {
+	var userCredential []entity.UserCredential
+	var userCredentialResponse []models.UserCredentialResponse
+	var response = models.BaseResponse[[]models.UserCredentialResponse]{}
+
+	err := repo.db.Where("name LIKE ?", "%"+query+"%").Find(&userCredential).Error
+	if err != nil {
+		return response.BadRequest(userCredentialResponse, "Tidak dapat menemukan data")
+	}
+
+	for _, userCredential := range userCredential {
+		userCredentialResponse = append(userCredentialResponse, models.UserCredentialResponse{
+			Id:           userCredential.ID,
+			Email:        userCredential.Email,
+			FullName:     userCredential.FullName,
+			DateOfBirth:  userCredential.DateOfBirth,
+			AuthProvider: userCredential.AuthProvider,
+			Status:       userCredential.Status,
+			CreatedAt:    userCredential.CreatedAt,
+			UpdatedAt:    userCredential.UpdatedAt,
+			Deleted:      userCredential.Deleted,
+		})
+	}
+	return response.Success(userCredentialResponse, "Berhasil menemukan data")
+}
+
 func (repo *UserRespository) GetDetailUser(userId string) models.BaseResponse[models.UserCredentialResponse] {
 	//prepare data
 	var userCredential entity.UserCredential

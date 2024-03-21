@@ -34,3 +34,11 @@ func GetListUserWithPaginate(ctx *gin.Context) {
 	data := repo.GetListUser(page, size)
 	ctx.JSON(200, data)
 }
+
+func GetListUserWithQuery(ctx *gin.Context) {
+	query := ctx.DefaultQuery("query", "")
+
+	repo := user.Init()
+	data := repo.GetListUserByQuery(query)
+	ctx.JSON(200, data)
+}
