@@ -145,3 +145,24 @@ func (repo *UserRespository) GetTopUser() models.BaseResponse[[]models.UserCrede
 	return response.Success(UserCredentialResponse, "Berhasil mengambil data")
 
 }
+
+// Function Search By Username
+func (repo *UserRespository) SearchByUsername(userId string) models.BaseResponse[[]models.UserCredentialResponse] {
+	// Prepare Data
+	var userCredential []entity.UserCredential
+	var userCredentialResponse []models.UserCredentialResponse
+	var response = models.BaseResponse[[]models.UserCredentialResponse]{}
+
+	err := repo.db.Find(&userCredential).Error
+	if err != nil {
+		return response.BadRequest(userCredentialResponse, "User tidak ditemukan")
+	}
+
+	for _, userCredential := range userCredential {
+		userCredentialResponse = append(userCredentialResponse, models.UserCredentialResponse{
+			UserName: userCredential.Username,
+		})
+	}
+
+	return response.Success(userCredentialResponse, "Username berhasil ditemukan")
+}

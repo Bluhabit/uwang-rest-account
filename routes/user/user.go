@@ -34,3 +34,17 @@ func GetListUserWithPaginate(ctx *gin.Context) {
 	data := repo.GetListUser(page, size)
 	ctx.JSON(200, data)
 }
+
+func SearchByUsername(ctx *gin.Context) {
+	var response = models.BaseResponse[string]{}
+
+	id, ok := ctx.GetQuery("detail")
+
+	if !ok {
+		ctx.JSON(200, response.BadRequest("", "User tidak ditemukan"))
+	}
+
+	repo := user.Init()
+	data := repo.SearchByUsername(id)
+	ctx.JSON(200, data)
+}
