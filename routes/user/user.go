@@ -36,7 +36,12 @@ func GetListUserWithPaginate(ctx *gin.Context) {
 }
 
 func GetListUserWithQuery(ctx *gin.Context) {
-	query := ctx.DefaultQuery("query", "")
+	var response = models.BaseResponse[string]{}
+
+	query, ok := ctx.GetQuery("query")
+	if !ok {
+		ctx.JSON(200, response.BadRequest("", "List User tidak ditemukan"))
+	}
 
 	repo := user.Init()
 	data := repo.GetListUserByQuery(query)

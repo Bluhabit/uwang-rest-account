@@ -82,7 +82,7 @@ func (repo *UserRespository) GetListUserByQuery(query string) models.BaseRespons
 	var userCredentialResponse []models.UserCredentialResponse
 	var response = models.BaseResponse[[]models.UserCredentialResponse]{}
 
-	err := repo.db.Where("name LIKE ?", "%"+query+"%").Find(&userCredential).Error
+	err := repo.db.Where("full_name LIKE ?", "%"+query+"%").Find(&userCredential).Error
 	if err != nil {
 		return response.BadRequest(userCredentialResponse, "Tidak dapat menemukan data")
 	}
