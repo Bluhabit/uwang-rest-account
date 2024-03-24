@@ -38,7 +38,7 @@ func GetListUserWithPaginate(ctx *gin.Context) {
 func SearchByUsername(ctx *gin.Context) {
 	var response = models.BaseResponse[string]{}
 
-	id, ok := ctx.GetQuery("detail")
+	id, ok := ctx.GetQuery("username")
 
 	if !ok {
 		ctx.JSON(200, response.BadRequest("", "User tidak ditemukan"))

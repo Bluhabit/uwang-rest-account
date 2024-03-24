@@ -147,13 +147,13 @@ func (repo *UserRespository) GetTopUser() models.BaseResponse[[]models.UserCrede
 }
 
 // Function Search By Username
-func (repo *UserRespository) SearchByUsername(userId string) models.BaseResponse[[]models.UserCredentialResponse] {
+func (repo *UserRespository) SearchByUsername(username string) models.BaseResponse[[]models.UserCredentialResponse] {
 	// Prepare Data
 	var userCredential []entity.UserCredential
 	var userCredentialResponse []models.UserCredentialResponse
 	var response = models.BaseResponse[[]models.UserCredentialResponse]{}
 
-	err := repo.db.Find(&userCredential).Error
+	err := repo.db.Where("username=", username).Find(&userCredential).Error
 	if err != nil {
 		return response.BadRequest(userCredentialResponse, "User tidak ditemukan")
 	}
