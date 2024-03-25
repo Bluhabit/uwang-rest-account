@@ -49,14 +49,14 @@ func Paginate(page string, size string) func(db *gorm.DB) *gorm.DB {
 	}
 }
 
-func (repo *UserRespository) GetListUser(page string, size string) models.BaseResponse[[]models.UserCredentialResponse] {
+func (repo *UserRespository) GetListUser(page string, size string) models.BaseResponseWithPagination[[]models.UserCredentialResponse] {
 	var userCredential []entity.UserCredential
 	var UserCredentialResponse []models.UserCredentialResponse
-	var response = models.BaseResponse[[]models.UserCredentialResponse]{}
+	var response = models.BaseResponseWithPagination[[]models.UserCredentialResponse]{}
 
 	err := repo.db.Scopes(Paginate(page, size)).Find(&userCredential).Error
 	if err != nil {
-		return response.BadRequest(UserCredentialResponse, "Tidak dapat mengambil data")
+		return response.BadRequestPagination(UserCredentialResponse, "Tidak dapat mengambil data",page,size,0)
 	}
 	for _, userCredential := range userCredential {
 		UserCredentialResponse = append(UserCredentialResponse, models.UserCredentialResponse{
@@ -73,7 +73,13 @@ func (repo *UserRespository) GetListUser(page string, size string) models.BaseRe
 		})
 
 	}
-	return response.Success(UserCredentialResponse, "Berhasil mengambil data")
+	return response.SuccessWithPagination(
+		UserCredentialResponse, 
+		"Berhasil mengambil data",
+		page,
+		size,
+		len(userCredential),
+	)
 
 }
 
@@ -84,10 +90,10 @@ func (repo *UserRespository) GetDetailUser(userId string) models.BaseResponse[mo
 	var responseDetailUser = models.UserCredentialResponse{}
 	var response = models.BaseResponse[models.UserCredentialResponse]{}
 
-	if err := repo.db.Where("user_id = ?", userId).First(&userCredential).Error; err != nil {
+	if err := repo.db.Where("id = ?", userId).First(&userCredential).Error; err != nil {
 		return response.BadRequest(responseDetailUser, "Sesi tidak ditemukan")
 	}
-	if err := repo.db.Where("user_id = ?", userId).Find(&userProfile).Error; err != nil {
+	if err := repo.db.Where("id = ?", userId).Find(&userProfile).Error; err != nil {
 		return response.BadRequest(responseDetailUser, "Sesi tidak ditemukan")
 	}
 
