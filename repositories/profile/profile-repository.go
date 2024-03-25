@@ -88,7 +88,7 @@ func (repo *ProfileRespository) UpdateProfilePicture(sessionId string, profilePi
 
 	fmt.Printf("User Id %s", userId)
 	//jika belum ada buat data baru
-	if err := repo.db.Where("user_id = ? AND key = 'profile-picture'", userId).First(&userProfile).Error; err != nil {
+	if err := repo.db.Where("id = ? AND key = 'profile-picture'", userId).First(&userProfile).Error; err != nil {
 		var profilePictureID = uuid.NewString()
 		newProfile := &entity.UserProfile{
 			ID:        profilePictureID,
@@ -126,7 +126,7 @@ func (repo *ProfileRespository) UpdateProfileTopics(sessionId string, topics str
 	}
 
 	//jika belum ada buat data baru
-	if err := repo.db.Where("user_id = ? AND key = 'topics'", userId).First(&userProfile).Error; err != nil {
+	if err := repo.db.Where("id = ? AND key = 'topics'", userId).First(&userProfile).Error; err != nil {
 		var profilePictureID = uuid.NewString()
 		newProfile := &entity.UserProfile{
 			ID:        profilePictureID,
@@ -165,7 +165,7 @@ func (repo *ProfileRespository) UpdateProfileLevel(sessionId string, level strin
 	}
 
 	//jika belum ada buat data baru
-	if err := repo.db.Where("user_id = ? AND key = 'level'", userId).First(&userProfile).Error; err != nil {
+	if err := repo.db.Where("id = ? AND key = 'level'", userId).First(&userProfile).Error; err != nil {
 		var profilePictureID = uuid.NewString()
 		newProfile := &entity.UserProfile{
 			ID:        profilePictureID,
@@ -206,10 +206,10 @@ func (repo *ProfileRespository) GetProfile(sessionId string) models.BaseResponse
 	var userProfile []entity.UserProfile
 	var userCredential entity.UserCredential
 
-	if err := repo.db.Where("user_id = ?", userId).First(&userCredential).Error; err != nil {
+	if err := repo.db.Where("id = ?", userId).First(&userCredential).Error; err != nil {
 		return response.BadRequest(userCredentialResponse, "Sesi tidak ditemukan")
 	}
-	if err := repo.db.Where("user_id = ?", userId).Find(&userProfile).Error; err != nil {
+	if err := repo.db.Where("id = ?", userId).Find(&userProfile).Error; err != nil {
 		return response.BadRequest(userCredentialResponse, "")
 	}
 
@@ -256,7 +256,7 @@ func (repo *ProfileRespository) UpdateProfile(sessionId string, request models.U
 		return response.BadRequest(userCredentialResponse, "Sesi tidak ditemukan[1]")
 	}
 
-	err := repo.db.Where("id=?", userId).First(&userCredential).Error
+	err := repo.db.Where("id = ?", userId).First(&userCredential).Error
 	if err != nil {
 		return response.BadRequest(userCredentialResponse, "User tidak ditemukan")
 	}
@@ -270,7 +270,7 @@ func (repo *ProfileRespository) UpdateProfile(sessionId string, request models.U
 
 	//other profile
 	// region bio
-	err = repo.db.Where("user_id=? AND key='bio'", userId).First(&userProfile).Error
+	err = repo.db.Where("id=? AND key='bio'", userId).First(&userProfile).Error
 	if err != nil {
 		var profileId = uuid.NewString()
 		userProfile = entity.UserProfile{
@@ -297,7 +297,7 @@ func (repo *ProfileRespository) UpdateProfile(sessionId string, request models.U
 	})
 	//end region
 	//region topics
-	err = repo.db.Where("user_id=? AND key='topics'", userId).First(&userProfile).Error
+	err = repo.db.Where("id=? AND key='topics'", userId).First(&userProfile).Error
 	if err != nil {
 		var profileId = uuid.NewString()
 		userProfile = entity.UserProfile{
@@ -323,7 +323,7 @@ func (repo *ProfileRespository) UpdateProfile(sessionId string, request models.U
 	})
 	//end topics
 	//region link
-	err = repo.db.Where("user_id=? AND key='link'", userId).First(&userProfile).Error
+	err = repo.db.Where("id=? AND key='link'", userId).First(&userProfile).Error
 	if err != nil {
 		var profileId = uuid.NewString()
 		userProfile = entity.UserProfile{
