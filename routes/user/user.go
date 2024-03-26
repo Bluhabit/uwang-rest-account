@@ -13,6 +13,7 @@ func GetDetailUser(ctx *gin.Context) {
 
 	if !ok {
 		ctx.JSON(200, response.BadRequest("", "User tidak ditemukan"))
+		return
 	}
 
 	repo := user.Init()
@@ -40,7 +41,8 @@ func GetListUserWithQuery(ctx *gin.Context) {
 
 	query, ok := ctx.GetQuery("query")
 	if !ok {
-		ctx.JSON(200, response.BadRequest("", "List User tidak ditemukan"))
+		ctx.JSON(200, response.BadRequest("", "query param salah"))
+		return
 	}
 
 	repo := user.Init()
