@@ -351,7 +351,3 @@ func (repo *ProfileRespository) UpdateProfile(sessionId string, request models.U
 
 	return response.Success(userCredentialResponse, "Berhasil")
 }
-
-// func (repo *ProfileRespository) CreateNewPassword(sessionId string, password string) models.BaseResponse[models.UserCredentialResponse] {
-
-// }
