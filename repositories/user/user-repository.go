@@ -92,6 +92,9 @@ func (repo *UserRespository) GetListUserByQuery(query string) models.BaseRespons
 	if err != nil {
 		return response.BadRequest(userCredentialResponse, "Tidak dapat menemukan data")
 	}
+	if len(userCredential) == 0 {
+		return response.BadRequest(userCredentialResponse, "User tidak ditemukan")
+	}
 
 	for _, userCredential := range userCredential {
 		userCredentialResponse = append(userCredentialResponse, models.UserCredentialResponse{
