@@ -29,8 +29,7 @@ func GetTopSevenUser(ctx *gin.Context) {
 
 func GetListUserWithPaginate(ctx *gin.Context) {
 	page := ctx.DefaultQuery("page", "1")
-	size := ctx.DefaultQuery("size", "1")
-
+	size := ctx.DefaultQuery("size", "10")
 	repo := user.Init()
 	data := repo.GetListUser(page, size)
 	ctx.JSON(200, data)
@@ -42,8 +41,13 @@ func SearchByUsername(ctx *gin.Context) {
 	username, ok := ctx.GetQuery("username")
 
 	if !ok {
-		ctx.JSON(200, response.BadRequest("", "User tidak ditemukan"))
+		ctx.JSON(200, response.BadRequest("", "query param salah"))
+		return
   }
+	repo := user.Init()
+	data := repo.SearchByUsername(username)
+
+	ctx.JSON(200, data)
 }
 func GetListUserWithQuery(ctx *gin.Context) {
 	var response = models.BaseResponse[string]{}
@@ -55,7 +59,7 @@ func GetListUserWithQuery(ctx *gin.Context) {
 	}
 
 	repo := user.Init()
-	data := repo.SearchByUsername(username)
+	data := repo.GetListUserByQuery(query)
 
 	ctx.JSON(200, data)
 }

@@ -56,7 +56,7 @@ func (repo *UserRespository) GetListUser(page string, size string) models.BaseRe
 
 	err := repo.db.Scopes(Paginate(page, size)).Find(&userCredential).Error
 	if err != nil {
-		return response.BadRequestPagination(UserCredentialResponse, "Tidak dapat mengambil data",page,size,0)
+		return response.BadRequestPagination(UserCredentialResponse, "Tidak dapat mengambil data",page,size,0,0)
 	}
 	for _, userCredential := range userCredential {
 		UserCredentialResponse = append(UserCredentialResponse, models.UserCredentialResponse{
@@ -73,12 +73,15 @@ func (repo *UserRespository) GetListUser(page string, size string) models.BaseRe
 		})
 
 	}
+	total_data := len(userCredential)
+	sizeInt,_ := strconv.Atoi(size) 
 	return response.SuccessWithPagination(
 		UserCredentialResponse, 
 		"Berhasil mengambil data",
 		page,
 		size,
-		len(userCredential),
+		total_data,
+		total_data / sizeInt ,
 	)
 
 }

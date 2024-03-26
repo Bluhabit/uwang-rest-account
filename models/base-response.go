@@ -12,6 +12,7 @@ type BaseResponseWithPagination[T any] struct {
 	Page       string `json:"page"`
 	Size       string `json:"size"`
 	TotalData  int `json:"total_data"`
+	TotalPage  int `json:"total_page"`
 }
 
 func (BaseResponse[T]) Success(data T, message string) BaseResponse[T] {
@@ -22,7 +23,8 @@ func (BaseResponse[T]) Success(data T, message string) BaseResponse[T] {
 	}
 }
 
-func (BaseResponseWithPagination[T]) SuccessWithPagination(data T, message string, page string, size string, total_data int) BaseResponseWithPagination[T] {
+func (BaseResponseWithPagination[T]) SuccessWithPagination(data T, message string, page string, size string, total_data int, total_page int) BaseResponseWithPagination[T] {
+
 	return BaseResponseWithPagination[T]{
 		StatusCode: 200,
 		Data:       data,
@@ -30,11 +32,13 @@ func (BaseResponseWithPagination[T]) SuccessWithPagination(data T, message strin
 		Page:       page,
 		Size:       size,
 		TotalData:  total_data,
+		TotalPage:  total_page,
+
 	}
 
 }
 
-func (BaseResponseWithPagination[T]) BadRequestPagination(data T, message string, page string, size string, total_data int) BaseResponseWithPagination[T] {
+func (BaseResponseWithPagination[T]) BadRequestPagination(data T, message string, page string, size string, total_data int,total_page int) BaseResponseWithPagination[T] {
 	return BaseResponseWithPagination[T]{
 		StatusCode: 400,
 		Data:       data,
@@ -42,6 +46,7 @@ func (BaseResponseWithPagination[T]) BadRequestPagination(data T, message string
 		Page:       page,
 		Size:       size,
 		TotalData:  total_data,
+		TotalPage:  total_page,
 	}
 }
 
