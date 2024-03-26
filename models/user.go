@@ -15,3 +15,9 @@ type UserCredentialResponse struct {
 	Deleted      bool                  `json:"deleted"`
 	UserProfile  []UserProfileResponse `json:"user_profile"`
 }
+
+type SearchByUsernameResponse struct {
+	Id       string `json:"id"`
+	FullName string `json:"full_name"`
+	UserName string `json:"username"`
+}
