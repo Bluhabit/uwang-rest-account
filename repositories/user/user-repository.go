@@ -147,24 +147,27 @@ func (repo *UserRespository) GetTopUser() models.BaseResponse[[]models.UserCrede
 }
 
 // Function Search By Username
-func (repo *UserRespository) SearchByUsername(username string) models.BaseResponse[[]models.UserCredentialResponse] {
+func (repo *UserRespository) SearchByUsername(username string) models.BaseResponse[[]models.SearchByUsernameResponse] {
 	// Prepare Data
 	var userCredential []entity.UserCredential
-	var userCredentialResponse []models.UserCredentialResponse
-	var response = models.BaseResponse[[]models.UserCredentialResponse]{}
+	var SearchByUsernameResponse []models.SearchByUsernameResponse
+	var response = models.BaseResponse[[]models.SearchByUsernameResponse]{}
 
-	err := repo.db.Where("username=?", username).Find(&userCredential).Error
+	err := repo.db.Where("username LIKE ?", "%"+username+"%").Find(&userCredential).Error
 	if err != nil {
-		return response.BadRequest(userCredentialResponse, "User tidak ditemukan")
+		return response.BadRequest(SearchByUsernameResponse, "User tidak ditemukan")
+	}
+	if len(userCredential) == 0 {
+		return response.BadRequest(SearchByUsernameResponse, "User tidak ditemukan")
 	}
 
 	for _, userCredential := range userCredential {
-		userCredentialResponse = append(userCredentialResponse, models.UserCredentialResponse{
+		SearchByUsernameResponse = append(SearchByUsernameResponse, models.SearchByUsernameResponse{
 			Id:       userCredential.ID,
 			FullName: userCredential.FullName,
 			UserName: userCredential.Username,
 		})
 	}
 
-	return response.Success(userCredentialResponse, "Berhasil mengambil data")
+	return response.Success(SearchByUsernameResponse, "Berhasil mengambil data")
 }

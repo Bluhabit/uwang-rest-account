@@ -42,6 +42,7 @@ func SearchByUsername(ctx *gin.Context) {
 
 	if !ok {
 		ctx.JSON(200, response.BadRequest("", "User tidak ditemukan"))
+		return
 	}
 
 	repo := user.Init()
