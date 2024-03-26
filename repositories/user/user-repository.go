@@ -153,16 +153,18 @@ func (repo *UserRespository) SearchByUsername(username string) models.BaseRespon
 	var userCredentialResponse []models.UserCredentialResponse
 	var response = models.BaseResponse[[]models.UserCredentialResponse]{}
 
-	err := repo.db.Where("username=", username).Find(&userCredential).Error
+	err := repo.db.Where("username=?", username).Find(&userCredential).Error
 	if err != nil {
 		return response.BadRequest(userCredentialResponse, "User tidak ditemukan")
 	}
 
 	for _, userCredential := range userCredential {
 		userCredentialResponse = append(userCredentialResponse, models.UserCredentialResponse{
+			Id:       userCredential.ID,
+			FullName: userCredential.FullName,
 			UserName: userCredential.Username,
 		})
 	}
 
-	return response.Success(userCredentialResponse, "Username berhasil ditemukan")
+	return response.Success(userCredentialResponse, "Berhasil mengambil data")
 }

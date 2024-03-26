@@ -20,7 +20,7 @@ func InitRoutes(router *gin.Engine) {
 
 	v1Admin := router.Group("/v1/admin")
 	{
-		v1Admin.GET("/get-list-user-by-query", user.SearchByUsername)
+		v1Admin.GET("/search-by-username", user.SearchByUsername)
 		v1Admin.GET("/get-list-user", middlewares.AuthMiddleware(), user.GetListUserWithPaginate)
 		v1Admin.GET("/get-detail-user", middlewares.AuthMiddleware(), user.GetDetailUser)
 		v1Admin.GET("/get-profile", middlewares.AuthMiddleware(), profile.GetProfile)
