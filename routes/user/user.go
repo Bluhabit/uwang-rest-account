@@ -13,6 +13,7 @@ func GetDetailUser(ctx *gin.Context) {
 
 	if !ok {
 		ctx.JSON(200, response.BadRequest("", "User tidak ditemukan"))
+		return
 	}
 
 	repo := user.Init()
@@ -42,10 +43,19 @@ func SearchByUsername(ctx *gin.Context) {
 
 	if !ok {
 		ctx.JSON(200, response.BadRequest("", "User tidak ditemukan"))
+  }
+}
+func GetListUserWithQuery(ctx *gin.Context) {
+	var response = models.BaseResponse[string]{}
+
+	query, ok := ctx.GetQuery("query")
+	if !ok {
+		ctx.JSON(200, response.BadRequest("", "query param salah"))
 		return
 	}
 
 	repo := user.Init()
 	data := repo.SearchByUsername(username)
+
 	ctx.JSON(200, data)
 }

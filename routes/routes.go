@@ -37,4 +37,3 @@ func InitRoutes(router *gin.Engine) {
 		})
 		v1Admin.GET("/get-top-user", middlewares.AuthMiddleware(), user.GetTopSevenUser)
 	}
-}
