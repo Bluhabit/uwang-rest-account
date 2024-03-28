@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/Bluhabit/uwang-rest-account/common"
 	"github.com/Bluhabit/uwang-rest-account/routes"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"log"
@@ -40,6 +41,18 @@ func main() {
 	})
 
 	routes.InitRoutes(r)
+
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"https://admin-uwang.bluhabit.id", "http://localhost:3000"},
+		AllowMethods:     []string{"PUT", "PATCH", "POST", "GET", "DELETE"},
+		AllowHeaders:     []string{"Origin"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: false,
+		AllowOriginFunc: func(origin string) bool {
+			return origin == "https://admin-uwang/bluhabit.id" || origin == "http://localhost:3000"
+		},
+		MaxAge: 12 * time.Hour,
+	}))
 
 	if err := r.Run(":8000"); err != nil {
 		log.Fatal("Gagal memulai server")
